@@ -1,0 +1,10 @@
+{
+  "version_pinned": {
+    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+    "features": {
+      "kind": {
+        "version": "v0.32.0"
+      }
+    }
+  }
+}

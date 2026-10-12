@@ -1,0 +1,19 @@
+{
+  "id": "kustomize",
+  "version": "1.0.0",
+  "name": "kustomize",
+  "description": "Installs the kustomize CLI for template-free Kubernetes manifest customization.",
+  "documentationURL": "https://github.com/kubernetes-in-action/devcontainer-features/tree/main/src/kustomize",
+  "options": {
+    "version": {
+      "type": "string",
+      "proposals": [
+        "latest",
+        "v5.8.3",
+        "v5.8.2"
+      ],
+      "default": "latest",
+      "description": "kustomize release tag to install (e.g. v5.8.3), or 'latest' to resolve the newest release at build time."
+    }
+  }
+}

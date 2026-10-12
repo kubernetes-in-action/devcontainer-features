@@ -1,0 +1,23 @@
+{
+  "id": "kind",
+  "version": "1.0.0",
+  "name": "kind (Kubernetes in Docker)",
+  "description": "Installs the kind CLI for running local Kubernetes clusters inside Docker/docker-in-docker devcontainers.",
+  "documentationURL": "https://github.com/kubernetes-in-action/devcontainer-features/tree/main/src/kind",
+  "options": {
+    "version": {
+      "type": "string",
+      "proposals": [
+        "latest",
+        "v0.33.0",
+        "v0.32.0"
+      ],
+      "default": "latest",
+      "description": "kind release tag to install (e.g. v0.33.0), or 'latest' to resolve the newest release at build time."
+    }
+  },
+  "installsAfter": [
+    "ghcr.io/devcontainers/features/common-utils",
+    "ghcr.io/devcontainers/features/docker-in-docker"
+  ]
+}

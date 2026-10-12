@@ -1,0 +1,10 @@
+{
+  "version_pinned": {
+    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+    "features": {
+      "kustomize": {
+        "version": "v5.7.1"
+      }
+    }
+  }
+}

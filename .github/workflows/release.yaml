@@ -1,0 +1,63 @@
+name: "Release dev container features"
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  packages: write
+  id-token: write
+
+jobs:
+  publish:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: "Publish Features"
+        uses: devcontainers/action@v1
+        with:
+          publish-features: "true"
+          base-path-to-features: "./src"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  sign:
+    needs: publish
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        feature: ["kind", "kustomize"]
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: "Install oras"
+        uses: oras-project/setup-oras@v1
+
+      - name: "Install cosign"
+        uses: sigstore/cosign-installer@v3
+
+      - name: "Sign published feature (keyless, OIDC)"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REGISTRY: ghcr.io/${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          echo "${GH_TOKEN}" | oras login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+          version="$(jq -r .version "src/${{ matrix.feature }}/devcontainer-feature.json")"
+          major="${version%%.*}"
+          ref="${REGISTRY}/${{ matrix.feature }}:${major}"
+
+          digest="$(oras manifest fetch --descriptor "${ref}" | jq -r .digest)"
+          echo "==> Signing ${ref} (${digest})"
+
+          cosign sign --yes "${REGISTRY}/${{ matrix.feature }}@${digest}"
